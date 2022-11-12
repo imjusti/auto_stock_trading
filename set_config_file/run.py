@@ -51,17 +51,18 @@ print("조건7", case7)
 
 # 오늘의 방향 결정
 dirToday = -1
-if case8 == case1:
+msg = "금일휴업"
+if case8 == str(case1):
     dirToday = case1
-    print("10시매도")
-elif case8 == case7:
+    msg = "10시매도"
+elif case8 == str(case7):
     dirToday = case7
     etime = etime2
-    print("종가매도")
-else:
-    print("금일휴업")
+    msg = "종가매도"
 
 if dirToday > -1:
+    msg += ", 방향: " + str(dirToday)
+    
     # 매매할 종목
     stock_code = "122630"    # KODEX 레버리지
     if dirToday == "0": stock_code = "252710"    # TIGER 200선물인버스2X
@@ -77,9 +78,9 @@ if dirToday > -1:
     f.write("} \n")
     f.close()
 
+print("[오늘의 작전] " + msg)
+
 # 텔레그램으로 메시지 전송
 bot = telegram.Bot(token=config['token'])
 chat_id = config['chat_id']
-msg = "금일휴업"
-if dirToday > -1: msg = "방향: " + dirToday + ", 매도: " + etime
 bot.sendMessage(chat_id=chat_id, text="[오늘의 작전] " + msg)
