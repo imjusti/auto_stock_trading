@@ -5,11 +5,18 @@ from bs4 import BeautifulSoup
 import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import telegram
+import json
+
 
 # 매수/매도시간
 stime = "08:51"
 etime = "10:01"
 etime2 = "15:21"
+
+# 설정파일 읽기
+with open('telegram.json') as f:
+    config = json.load(f)
 
 # 오늘날짜
 dt_today = datetime.date.today()
@@ -69,3 +76,10 @@ if dirToday > -1:
     f.write("  \"Deposit\": 0 \n")
     f.write("} \n")
     f.close()
+
+# 텔레그램으로 메시지 전송
+bot = telegram.Bot(token=config['token'])
+chat_id = config['chat_id']
+msg = "금일휴업"
+if dirToday > -1: msg = "방향: " + dirToday + ", 매도: " + etime
+bot.sendMessage(chat_id=chat_id, text="[오늘의 작전] " + msg)

@@ -8,7 +8,7 @@ import telegram
 import json
 
 # 설정파일 읽기
-with open('config.json') as f:
+with open('telegram.json') as f:
     config = json.load(f)
 
 while(True):
