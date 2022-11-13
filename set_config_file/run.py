@@ -8,6 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import telegram
 import json
 
+path = 'C:/projects/python/auto_stock_trading/set_config_file/'
 
 # 매수/매도시간
 stime = "08:51"
@@ -15,7 +16,7 @@ etime = "10:01"
 etime2 = "15:21"
 
 # 설정파일 읽기
-with open('telegram.json') as f:
+with open(path + "telegram.json") as f:
     config = json.load(f)
 
 # 오늘날짜
@@ -36,7 +37,7 @@ scope = [
     'https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive',
 ]
-json_file_name = "google-docs-key.json"
+json_file_name = path + "/google-docs-key.json"
 spreadsheet_url = "https://docs.google.com/spreadsheets/d/1clAW-k3iSO24vRqMm2KRBWxdY-F8vlkeLZFARE8FRno/edit#gid=1099702506"
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
