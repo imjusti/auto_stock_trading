@@ -12,16 +12,19 @@ import os
 # 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
 
-# 매수/매도시간
-stime = "08:51"
-etime = "10:01"
-etime2 = "15:21"
-# 설정파일 경로
-output_path = "C:\Release\Data\Strategy.json"
-
+# 설정파일 읽기
+with open(path + "/config.json", 'r', encoding='utf-8') as f:
+    config = json.load(f)
 # 텔레그램 설정파일 읽기
 with open(path + "/telegram.json") as f:
-    config = json.load(f)
+    cfg_telegram = json.load(f)
+
+# 매수/매도시간
+stime = config['buy_time']
+etime = config['sell_time']
+etime2 = config['sell_time2']
+# 설정파일 경로
+output_path = config['output_path']
 
 # 오늘날짜
 dt_today = datetime.date.today()
@@ -29,11 +32,11 @@ str_today = dt_today.strftime('%Y-%m-%d')
 print("\ndate: " + str_today)
 
 # 조건8 예측정보 가져오기
-url = "https://imjusti.cafe24.com/stock/calc_world_index.php"
+url = config['case8_url']
 req = requests.get(url)
 soup = BeautifulSoup(req.content, 'html.parser')
 result = soup.find(id="result")
-case8 = int(result.string)
+case8 = 1 #int(result.string)
 print("조건8", case8)
 
 # 조건1,7 예측정보 가져오기
@@ -42,15 +45,15 @@ scope = [
     'https://www.googleapis.com/auth/drive',
 ]
 json_file_name = path + "/google-docs-key.json"
-spreadsheet_url = "https://docs.google.com/spreadsheets/d/1clAW-k3iSO24vRqMm2KRBWxdY-F8vlkeLZFARE8FRno/edit#gid=1099702506"
+spreadsheet_url = config['google_spreadsheet_url']
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
 gc = gspread.authorize(credentials)
 doc = gc.open_by_url(spreadsheet_url)
-worksheet = doc.worksheet("2018-10-31:종가시가관계")
+worksheet = doc.worksheet(config['google_spreadsheet_worksheet'])
 cell = worksheet.find(str_today)
-case1 = int(worksheet.acell('AA' + str(cell.row)).value)
-case7 = int(worksheet.acell('AQ' + str(cell.row)).value)
+case1 = int(worksheet.acell(config['google_spreadsheet_case1_colname'] + str(cell.row)).value)
+case7 = int(worksheet.acell(config['google_spreadsheet_case7_colname'] + str(cell.row)).value)
 print("조건1", case1)
 print("조건7", case7)
 
@@ -85,6 +88,6 @@ if dirToday > -1:
 print("[오늘의 작전] " + msg)
 
 # 텔레그램으로 메시지 전송
-bot = telegram.Bot(token=config['token'])
-chat_id = config['chat_id']
+bot = telegram.Bot(token=cfg_telegram['token'])
+chat_id = cfg_telegram['chat_id']
 bot.sendMessage(chat_id=chat_id, text="[오늘의 작전] " + msg)
