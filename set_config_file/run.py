@@ -7,8 +7,10 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import telegram
 import json
+import os
 
-path = 'C:/projects/python/auto_stock_trading/set_config_file/'
+# 파일경로
+path = os.path.dirname(os.path.realpath(__file__))
 
 # 매수/매도시간
 stime = "08:51"
@@ -16,7 +18,7 @@ etime = "10:01"
 etime2 = "15:21"
 
 # 설정파일 읽기
-with open(path + "telegram.json") as f:
+with open(path + "/telegram.json") as f:
     config = json.load(f)
 
 # 오늘날짜
