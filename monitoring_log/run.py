@@ -24,7 +24,6 @@ while(True):
         # 마지막줄 읽어오기
         with open(filename, 'rt', encoding='UTF-8') as f:
             last_line = f.readlines()[-1]
-        f.close()
         print("last_line:" + last_line)
 
         # 로그 출력시간 가져오기
