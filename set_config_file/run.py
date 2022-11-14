@@ -36,7 +36,7 @@ url = config['case8_url']
 req = requests.get(url)
 soup = BeautifulSoup(req.content, 'html.parser')
 result = soup.find(id="result")
-case8 = 1 #int(result.string)
+case8 = int(result.string)
 print("조건8", case8)
 
 # 조건1,7 예측정보 가져오기
@@ -76,12 +76,13 @@ if dirToday > -1:
     if dirToday == "0": stock_code = "252710"    # TIGER 200선물인버스2X
 
     # 자동매매 프로그램 설정파일 생성
-    data = {}
-    data['time'] = str_today
-    data['timeBuy'] = stime
-    data['timeSel'] = etime
-    data['Code'] = stock_code
-    data['Deposit'] = 0
+    data = {
+        'time': str_today,
+        'timeBuy': stime,
+        'timeSel': etime,
+        'Code': stock_code,
+        'Deposit': 0
+    }
     with open(output_path, 'w') as outfile:
         json.dump(data, outfile, indent=2)
 
