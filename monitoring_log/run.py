@@ -6,9 +6,13 @@ import datetime
 import os.path
 import telegram
 import json
+import os
+
+# 파일경로
+path = os.path.dirname(os.path.realpath(__file__))
 
 # 설정파일 읽기
-with open('telegram.json') as f:
+with open(path + '/telegram.json') as f:
     config = json.load(f)
 
 while(True):
