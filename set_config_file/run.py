@@ -9,15 +9,17 @@ import telegram
 import json
 import os
 
-# 파일경로
+# 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
 
 # 매수/매도시간
 stime = "08:51"
 etime = "10:01"
 etime2 = "15:21"
+# 설정파일 경로
+output_path = "C:\Release\Data\Strategy.json"
 
-# 설정파일 읽기
+# 텔레그램 설정파일 읽기
 with open(path + "/telegram.json") as f:
     config = json.load(f)
 
@@ -31,7 +33,7 @@ url = "https://imjusti.cafe24.com/stock/calc_world_index.php"
 req = requests.get(url)
 soup = BeautifulSoup(req.content, 'html.parser')
 result = soup.find(id="result")
-case8 = result.string
+case8 = int(result.string)
 print("조건8", case8)
 
 # 조건1,7 예측정보 가져오기
@@ -47,18 +49,18 @@ gc = gspread.authorize(credentials)
 doc = gc.open_by_url(spreadsheet_url)
 worksheet = doc.worksheet("2018-10-31:종가시가관계")
 cell = worksheet.find(str_today)
-case1 = worksheet.acell('AA' + str(cell.row)).value
-case7 = worksheet.acell('AQ' + str(cell.row)).value
+case1 = int(worksheet.acell('AA' + str(cell.row)).value)
+case7 = int(worksheet.acell('AQ' + str(cell.row)).value)
 print("조건1", case1)
 print("조건7", case7)
 
 # 오늘의 방향 결정
 dirToday = -1
 msg = "금일휴업"
-if case8 == str(case1):
+if case8 == case1:
     dirToday = case1
     msg = "10시매도"
-elif case8 == str(case7):
+elif case8 == case7:
     dirToday = case7
     etime = etime2
     msg = "종가매도"
@@ -71,15 +73,14 @@ if dirToday > -1:
     if dirToday == "0": stock_code = "252710"    # TIGER 200선물인버스2X
 
     # 자동매매 프로그램 설정파일 생성
-    f = open("C:\Release\Data\Strategy.json", 'w')
-    f.write("{ \n")
-    f.write("  \"time\": \"" + str_today + "\", \n")
-    f.write("  \"timeBuy\": \"" + stime + "\", \n")
-    f.write("  \"timeSel\": \"" + etime + "\", \n")
-    f.write("  \"Code\": \"" + stock_code + "\", \n")
-    f.write("  \"Deposit\": 0 \n")
-    f.write("} \n")
-    f.close()
+    data = {}
+    data['time'] = str_today
+    data['timeBuy'] = stime
+    data['timeSel'] = etime
+    data['Code'] = stock_code
+    data['Deposit'] = 0
+    with open(output_path, 'w') as outfile:
+        json.dump(data, outfile, indent=2)
 
 print("[오늘의 작전] " + msg)
 
