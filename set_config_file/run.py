@@ -15,9 +15,12 @@ path = os.path.dirname(os.path.realpath(__file__))
 # 설정파일 읽기
 with open(path + "/config.json", 'r', encoding='utf-8') as f:
     config = json.load(f)
+    
 # 텔레그램 설정파일 읽기
 with open(path + "/telegram.json") as f:
     cfg_telegram = json.load(f)
+bot = telegram.Bot(token=cfg_telegram['token'])
+chat_id = cfg_telegram['chat_id']
 
 # 매수/매도시간
 stime = config['buy_time']
@@ -86,12 +89,16 @@ if dirToday > -1:
     with open(output_path, 'w') as outfile:
         json.dump(data, outfile, indent=2)
 
-# 텔레그램으로 메시지 전송
-bot = telegram.Bot(token=cfg_telegram['token'])
-chat_id = cfg_telegram['chat_id']
+# 텔레그램으로 오늘의 작전 전송
 msg_telegram = "[오늘의 작전] " + msg
 bot.sendMessage(chat_id=chat_id, text=msg_telegram)
 print(msg_telegram)
+
+# 각 조건값들 전송
+msg_telegram = '조건1: ' + str(case1) + '\n'
+msg_telegram += '조건7: ' + str(case7) + '\n'
+msg_telegram += '조건8: ' + str(case8) + '\n'
+bot.sendMessage(chat_id=chat_id, text=msg_telegram)
 
 ## 추가정보
 # 최근 적중율
