@@ -86,9 +86,25 @@ if dirToday > -1:
     with open(output_path, 'w') as outfile:
         json.dump(data, outfile, indent=2)
 
-print("[오늘의 작전] " + msg)
-
 # 텔레그램으로 메시지 전송
 bot = telegram.Bot(token=cfg_telegram['token'])
 chat_id = cfg_telegram['chat_id']
-bot.sendMessage(chat_id=chat_id, text="[오늘의 작전] " + msg)
+msg_telegram = "[오늘의 작전] " + msg
+bot.sendMessage(chat_id=chat_id, text=msg_telegram)
+print(msg_telegram)
+
+## 추가정보
+# 최근 적중율
+case8_hit = worksheet.acell('BG' + str(cell.row - 1)).value
+case9_hit = worksheet.acell('BL' + str(cell.row - 1)).value
+case10_hit = worksheet.acell('BQ' + str(cell.row - 1)).value
+# MDD
+case8_mdd = worksheet.acell('BF' + str(cell.row + 6)).value
+case9_mdd = worksheet.acell('BK' + str(cell.row + 6)).value
+case10_mdd = worksheet.acell('BP' + str(cell.row + 6)).value
+msg_telegram = '[최근적중율, MDD]\n'
+msg_telegram += '조건8: ' + str(case8_hit) + '%, ' + str(case8_mdd) + '\n'
+msg_telegram += '조건9: ' + str(case9_hit) + '%, ' + str(case9_mdd) + '\n'
+msg_telegram += '조건10: ' + str(case10_hit) + '%, ' + str(case10_mdd)
+bot.sendMessage(chat_id=chat_id, text=msg_telegram)
+print(msg_telegram)
