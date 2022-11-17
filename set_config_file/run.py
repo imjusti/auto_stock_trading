@@ -45,12 +45,9 @@ scope = [
     'https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive',
 ]
-json_file_name = path + '/google-docs-key.json'
-spreadsheet_url = config['google_spreadsheet_url']
-
-credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name(path + '/google-docs-key.json', scope)
 gc = gspread.authorize(credentials)
-doc = gc.open_by_url(spreadsheet_url)
+doc = gc.open_by_url(config['google_spreadsheet_url'])
 worksheet = doc.worksheet(config['google_spreadsheet_worksheet'])
 cell = worksheet.find(str_today)
 case1 = int(worksheet.acell(config['google_spreadsheet_case1_colname'] + str(cell.row)).value)
