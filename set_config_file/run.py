@@ -84,7 +84,8 @@ if dirToday > -1:
     with open(output_path, 'w') as outfile:
         json.dump(data, outfile, indent=2)
 
-msg_telegram = '[오늘의 작전] ' + msg + '\n'
+msg_telegram = '날짜: ' + str_today+ '\n'
+msg_telegram += '[오늘의 작전] ' + msg + '\n'
 msg_telegram += '\n'
 
 # 각 조건값들 전송
