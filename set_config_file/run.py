@@ -97,13 +97,13 @@ msg_telegram += '\n'
 
 ## 추가정보
 # 최근 적중율
-case8_hit = worksheet.acell('BG' + str(cell.row - 1)).value
-case9_hit = worksheet.acell('BL' + str(cell.row - 1)).value
-case10_hit = worksheet.acell('BQ' + str(cell.row - 1)).value
+case8_hit = worksheet.acell('BJ' + str(cell.row - 1)).value
+case9_hit = worksheet.acell('BO' + str(cell.row - 1)).value
+case10_hit = worksheet.acell('BT' + str(cell.row - 1)).value
 # MDD
-case8_mdd = worksheet.acell('BF' + str(cell.row + 6)).value
-case9_mdd = worksheet.acell('BK' + str(cell.row + 6)).value
-case10_mdd = worksheet.acell('BP' + str(cell.row + 6)).value
+case8_mdd = worksheet.acell('BI' + str(cell.row + 6)).value
+case9_mdd = worksheet.acell('BN' + str(cell.row + 6)).value
+case10_mdd = worksheet.acell('BS' + str(cell.row + 6)).value
 msg_telegram += '[최근적중율, MDD]\n'
 msg_telegram += '조건8: ' + str(case8_hit) + '%, ' + str(case8_mdd) + '\n'
 msg_telegram += '조건9: ' + str(case9_hit) + '%, ' + str(case9_mdd) + '\n'
