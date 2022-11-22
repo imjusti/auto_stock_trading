@@ -39,5 +39,6 @@ while(True):
             bot = telegram.Bot(token=config['token'])
             chat_id = config['chat_id']
             bot.sendMessage(chat_id=chat_id, text="로그 갱신 오류")
+            time.sleep(60 * 5)
 
     time.sleep(30)
