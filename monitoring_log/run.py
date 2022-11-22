@@ -35,6 +35,7 @@ while(True):
         print('last_line:' + last_line)
 
         # 로그파일 훑어보기
+        print("currLine", currLine)
         if len(arrLog) > currLine:
             for lineNumber in range(currLine, len(arrLog)):
                 strLine = arrLog[lineNumber];
@@ -67,7 +68,7 @@ while(True):
             print(str(dtime) + ' diff:' + str(diff.seconds))
             errorSec = 120  # 120초 동안 로그 갱신이 안되면 에러
             if currStatus == 'buying': errorSec = 60 * 10  # 매수주문 후에는 10분까지 괜찮음
-            if diff.seconds > 120:
+            if diff.seconds > errorSec:
                 print('error! 로그 갱신 안됨')
 
                 # 텔레그램으로 메시지 전송
