@@ -18,6 +18,7 @@ with open(path + '/config.json', 'r', encoding='utf-8') as f:
 # 텔레그램 설정파일 읽기
 with open(path + '/telegram.json') as f:
     cfg_telegram = json.load(f)
+bot = telegram.Bot(token=cfg_telegram['token'])
 
 currLine = 0
 currStatus = 'buy'  # buy -> buying -> Sel -> Selling
@@ -48,12 +49,14 @@ while(True):
                     if currStatus != 'Sel' and status == 'Sel':
                         currStatus = 'Sel'
                         print('change!!!!', currTime)
+                        bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='매수완료')
                 elif strLine.find('매수주문이 완료되었습니다.') > -1:
                     currStatus = 'buying'
                     print('매수완료', currTime)
                 elif strLine.find('매도주문이 완료되었습니다.') > -1:
                     currStatus = 'Selling'
                     print('매도완료', currTime)
+                    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='매도완료')
         print(currStatus)
         
         # 매도후에는 모니터링 종료
@@ -72,9 +75,7 @@ while(True):
                 print('error! 로그 갱신 안됨')
 
                 # 텔레그램으로 메시지 전송
-                bot = telegram.Bot(token=cfg_telegram['token'])
-                chat_id = cfg_telegram['chat_id']
-                bot.sendMessage(chat_id=chat_id, text='로그 갱신 오류')
+                bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='로그 갱신 오류')
                 time.sleep(60 * 5)
 
     time.sleep(30)
