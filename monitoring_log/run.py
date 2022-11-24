@@ -8,6 +8,13 @@ import telegram
 import json
 import os
 
+# 로그파일 읽기
+def loadLogFile(filename):
+    with open(filename, 'rt', encoding='UTF-8') as f:
+        arrLog = f.readlines()
+
+    return arrLog
+
 # 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -88,10 +95,3 @@ while True:
                 time.sleep(60 * 5)
 
     time.sleep(30)
-
-# 로그파일 읽기
-def loadLogFile(filename):
-    with open(filename, 'rt', encoding='UTF-8') as f:
-        arrLog = f.readlines()
-
-    return arrLog
