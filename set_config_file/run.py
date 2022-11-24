@@ -19,6 +19,7 @@ with open(path + '/config.json', 'r', encoding='utf-8') as f:
 # 텔레그램 설정파일 읽기
 with open(path + "/telegram.json") as f:
     cfg_telegram = json.load(f)
+bot = telegram.Bot(token=cfg_telegram['token'])
 
 # 매수/매도시간
 stime = config['buy_time']
@@ -50,10 +51,16 @@ gc = gspread.authorize(credentials)
 doc = gc.open_by_url(config['google_spreadsheet_url'])
 worksheet = doc.worksheet(config['google_spreadsheet_worksheet'])
 cell = worksheet.find(str_today)
-case1 = int(worksheet.acell(config['google_spreadsheet_case1_colname'] + str(cell.row)).value)
-case7 = int(worksheet.acell(config['google_spreadsheet_case7_colname'] + str(cell.row)).value)
-print('조건1', case1)
-print('조건7', case7)
+if cell is None:
+    msg_telegram = '엑셀에서 ' + str_today + ' 데이터를 가져오지 못했습니다.'
+    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=msg_telegram)
+    print(msg_telegram)
+    exit()
+else:
+    case1 = int(worksheet.acell(config['google_spreadsheet_case1_colname'] + str(cell.row)).value)
+    case7 = int(worksheet.acell(config['google_spreadsheet_case7_colname'] + str(cell.row)).value)
+    print('조건1', case1)
+    print('조건7', case7)
 
 # 오늘의 방향 결정
 dirToday = -1
@@ -110,7 +117,5 @@ msg_telegram += '조건9: ' + str(case9_hit) + '%, ' + str(case9_mdd) + '\n'
 msg_telegram += '조건10: ' + str(case10_hit) + '%, ' + str(case10_mdd)
 
 # 텔레그램으로 오늘의 작전 전송
-bot = telegram.Bot(token=cfg_telegram['token'])
-chat_id = cfg_telegram['chat_id']
-bot.sendMessage(chat_id=chat_id, text=msg_telegram)
+bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=msg_telegram)
 print(msg_telegram)
