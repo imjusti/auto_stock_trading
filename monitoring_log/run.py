@@ -30,7 +30,7 @@ while True:
 
     if os.path.isfile(filename):
         # 로그파일 읽어오기
-		arrLog = loadLogFile(filename)
+        arrLog = loadLogFile(filename)
         last_line = arrLog[-1]
         print('last_line:' + last_line)
 
@@ -91,7 +91,7 @@ while True:
 
 # 로그파일 읽기
 def loadLogFile(filename):
-	with open(filename, 'rt', encoding='UTF-8') as f:
-		arrLog = f.readlines()
+    with open(filename, 'rt', encoding='UTF-8') as f:
+        arrLog = f.readlines()
 
-	return arrLog
+    return arrLog
