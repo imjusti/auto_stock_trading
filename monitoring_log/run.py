@@ -12,8 +12,33 @@ import os
 def loadLogFile(filename):
     with open(filename, 'rt', encoding='UTF-8') as f:
         arrLog = f.readlines()
-
     return arrLog
+
+# 현재상태 구하기
+def getStatus(strLine):
+    status = None
+    if strLine.find('Idle==================') > -1:
+        status = strLine[-4:].strip()
+    elif strLine.find('매수주문이 완료되었습니다.') > -1:
+        status = 'buying'
+    elif strLine.find('매도주문이 완료되었습니다.') > -1:
+        status = 'Selling'
+    return status
+
+# 상태에 따른 메시지 생성
+def getMessage(currStatus, status):
+    strMessage = None
+    # Sel로 상태 변경시
+    if currStatus != 'Sel' and status == 'Sel':
+        strMessage = '매수완료'
+    # buying로 상태 변경시
+    elif currStatus != 'buying' and status == 'buying':
+        strMessage = '매수주문 완료'
+    # Selling로 상태 변경시
+    elif currStatus != 'Selling' and status == 'Selling':
+        strMessage = '매도주문 완료'
+    return strMessage
+
 
 # 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
@@ -44,35 +69,24 @@ while True:
         # 로그파일 훑어보기
         print("currLine", currLine)
         if len(arrLog) > currLine:
+            botMessage = None
             for lineNumber in range(currLine, len(arrLog)):
                 strLine = arrLog[lineNumber];
                 currLine = lineNumber
                 currTime = datetime.datetime.strptime(strLine[1:18], '%y-%m-%d %H:%M:%S')
 
-                status = None
-                if strLine.find('Idle==================') > -1:
-                    status = strLine[-4:].strip()
-                elif strLine.find('매수주문이 완료되었습니다.') > -1:
-                    status = 'buying'
-                elif strLine.find('매도주문이 완료되었습니다.') > -1:
-                    status = 'Selling'
-
-                botMessage = None
-                # Sel로 상태 변경시
-                if currStatus != 'Sel' and status == 'Sel':
-                    botMessage = '매수완료'
-                # buying로 상태 변경시
-                elif currStatus != 'buying' and status == 'buying':
-                    botMessage = '매수주문 완료'
-                # Selling로 상태 변경시
-                elif currStatus != 'Selling' and status == 'Selling':
-                    botMessage = '매도주문 완료'
-
-                if botMessage is not None:
-                    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=botMessage)
-                    print(botMessage, currTime)
-
+                # 상태를 가져오고
+                status = getStatus(strLine)
+                # 상태에 따라 메시지를 만들고
+                strMessage = getMessage(currStatus, status)
+                # 출력할 메시지를 만들고
+                if strMessage is not None: botMessage = botMessage + "\n" + strMessage
+                # 최종상태를 갱신
                 if status is not None: currStatus = status;
+
+            if botMessage is not None:
+                bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=botMessage)
+                print(currTime, botMessage)
         print(currStatus)
 
         # 매도후에는 모니터링 종료
