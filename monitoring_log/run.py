@@ -42,21 +42,31 @@ while(True):
                 strLine = arrLog[lineNumber];
                 currLine = lineNumber
                 currTime = datetime.datetime.strptime(strLine[1:18], '%y-%m-%d %H:%M:%S')
-                
+
+                status = None
                 if strLine.find('Idle==================') > -1:
                     status = strLine[-4:].strip()
-                    # buy -> Sel로 상태 변경시
-                    if currStatus != 'Sel' and status == 'Sel':
-                        currStatus = 'Sel'
-                        print('change!!!!', currTime)
-                        bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='매수완료')
                 elif strLine.find('매수주문이 완료되었습니다.') > -1:
-                    currStatus = 'buying'
-                    print('매수완료', currTime)
+                    status = 'buying'
                 elif strLine.find('매도주문이 완료되었습니다.') > -1:
-                    currStatus = 'Selling'
-                    print('매도완료', currTime)
-                    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='매도완료')
+                    status = 'Selling'
+
+                botMessage = None
+                # Sel로 상태 변경시
+                if currStatus != 'Sel' and status == 'Sel':
+                    botMessage = '매수완료'
+                # buying로 상태 변경시
+                elif currStatus != 'buying' and status == 'buying':
+                    botMessage = '매수주문 완료'
+                # Selling로 상태 변경시
+                elif currStatus != 'Selling' and status == 'Selling':
+                    botMessage = '매도주문 완료'
+
+                if botMessage is not None:
+                    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=botMessage)
+                    print(botMessage, currTime)
+
+                if status is not None: currStatus = status;
         print(currStatus)
         
         # 매도후에는 모니터링 종료
