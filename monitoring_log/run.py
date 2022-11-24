@@ -23,15 +23,14 @@ bot = telegram.Bot(token=cfg_telegram['token'])
 currLine = 0
 currStatus = 'buy'  # buy -> buying -> Sel -> Selling
 currTime = 0
-while(True):
+while True:
     # 오늘날짜
     dt_today = datetime.date.today()
     filename = config['log_path'] + '/Log' + dt_today.strftime('%Y-%m-%d') + '.dat'
 
     if os.path.isfile(filename):
         # 로그파일 읽어오기
-        with open(filename, 'rt', encoding='UTF-8') as f:
-            arrLog = f.readlines()
+		arrLog = loadLogFile(filename)
         last_line = arrLog[-1]
         print('last_line:' + last_line)
 
@@ -68,7 +67,7 @@ while(True):
 
                 if status is not None: currStatus = status;
         print(currStatus)
-        
+
         # 매도후에는 모니터링 종료
         if currStatus == 'Selling':
             break
@@ -89,3 +88,10 @@ while(True):
                 time.sleep(60 * 5)
 
     time.sleep(30)
+
+# 로그파일 읽기
+def loadLogFile(filename):
+	with open(filename, 'rt', encoding='UTF-8') as f:
+		arrLog = f.readlines()
+
+	return arrLog
