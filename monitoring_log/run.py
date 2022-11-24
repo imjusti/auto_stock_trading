@@ -69,7 +69,7 @@ while True:
         # 로그파일 훑어보기
         print("currLine", currLine)
         if len(arrLog) > currLine:
-            botMessage = None
+            botMessage = ''
             for lineNumber in range(currLine, len(arrLog)):
                 strLine = arrLog[lineNumber];
                 currLine = lineNumber
@@ -84,7 +84,7 @@ while True:
                 # 최종상태를 갱신
                 if status is not None: currStatus = status;
 
-            if botMessage is not None:
+            if len(botMessage) > 0:
                 bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=botMessage)
                 print(currTime, botMessage)
         print(currStatus)
