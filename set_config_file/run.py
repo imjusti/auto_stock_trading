@@ -11,6 +11,16 @@ import os
 
 # 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
+# 설정파일 읽기
+with open(path + '/config.json', 'r', encoding='utf-8') as f:
+    config = json.load(f)
+# 텔레그램 설정파일 읽기
+with open(path + "/telegram.json") as f:
+    cfg_telegram = json.load(f)
+bot = telegram.Bot(token=cfg_telegram['token'])
+# 오늘날짜
+str_today = datetime.date.today().strftime('%Y-%m-%d')
+print('\ndate: ' + str_today)
 
 # 구글 스프레드시트 가져오기
 def getGSpread():
@@ -43,6 +53,19 @@ def getCaseFromGSpread(worksheet):
         result = (case1, case7)
     return result
 
+# 전략 결정
+def decideStrategy(case1, case7, case8):
+    dirToday = -1
+    sellType = 1
+
+    if case8 == case1:
+        dirToday = case1
+    elif case8 == case7:
+        dirToday = case7
+        sellType = 2
+
+    return (dirToday, sellType)
+
 # 전략파일 생성
 def write2StrategyFile(str_today, buy_time, sell_time, stock_code, file_path):
     data = {
@@ -56,7 +79,13 @@ def write2StrategyFile(str_today, buy_time, sell_time, stock_code, file_path):
         json.dump(data, outfile, indent=2)
         
 # 메시지 생성
-def makeMessage(worksheet):
+def makeMessage(str_today, dirToday, sellType, case1, case7, case8, worksheet):
+    msg = '금일휴업'
+    if dirToday > -1:
+        if sellType == 1: msg = '10시매도'
+        elif sellType == 2: msg = '종가매도'
+        msg += ', 방향: ' + str(dirToday)
+
     msg_telegram = '날짜: ' + str_today+ '\n'
     msg_telegram += '[오늘의 작전] ' + msg + '\n'
     msg_telegram += '\n'
@@ -69,38 +98,29 @@ def makeMessage(worksheet):
     msg_telegram += '\n'
 
     ## 추가정보
-    # 최근 적중율
-    case8_hit = worksheet.acell('BJ' + str(cell.row - 1)).value
-    case9_hit = worksheet.acell('BO' + str(cell.row - 1)).value
-    case10_hit = worksheet.acell('BT' + str(cell.row - 1)).value
-    # MDD
-    case8_mdd = worksheet.acell('BI' + str(cell.row + 6)).value
-    case9_mdd = worksheet.acell('BN' + str(cell.row + 6)).value
-    case10_mdd = worksheet.acell('BS' + str(cell.row + 6)).value
-    msg_telegram += '[최근적중율, MDD]\n'
-    msg_telegram += '조건8: ' + str(case8_hit) + '%, ' + str(case8_mdd) + '\n'
-    msg_telegram += '조건9: ' + str(case9_hit) + '%, ' + str(case9_mdd) + '\n'
-    msg_telegram += '조건10: ' + str(case10_hit) + '%, ' + str(case10_mdd)
+    cell = worksheet.find(str_today) 
+    if cell is not None:
+        # 최근 적중율
+        case8_hit = worksheet.acell('BJ' + str(cell.row - 1)).value
+        case9_hit = worksheet.acell('BO' + str(cell.row - 1)).value
+        case10_hit = worksheet.acell('BT' + str(cell.row - 1)).value
+        # MDD
+        case8_mdd = worksheet.acell('BI' + str(cell.row + 6)).value
+        case9_mdd = worksheet.acell('BN' + str(cell.row + 6)).value
+        case10_mdd = worksheet.acell('BS' + str(cell.row + 6)).value
+        msg_telegram += '[최근적중율, MDD]\n'
+        msg_telegram += '조건8: ' + str(case8_hit) + '%, ' + str(case8_mdd) + '\n'
+        msg_telegram += '조건9: ' + str(case9_hit) + '%, ' + str(case9_mdd) + '\n'
+        msg_telegram += '조건10: ' + str(case10_hit) + '%, ' + str(case10_mdd)
     
     return msg_telegram
 
+# 텔레그램 전송
+def sendTelegramMsg(msg):
+    global bot, cfg_telegram
+    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=msg)
+    print(msg)
 
-# 설정파일 읽기
-with open(path + '/config.json', 'r', encoding='utf-8') as f:
-    config = json.load(f)
-
-# 텔레그램 설정파일 읽기
-with open(path + "/telegram.json") as f:
-    cfg_telegram = json.load(f)
-bot = telegram.Bot(token=cfg_telegram['token'])
-
-# 매도시간
-etime = config['sell_time']
-etime2 = config['sell_time2']
-
-# 오늘날짜
-str_today = datetime.date.today().strftime('%Y-%m-%d')
-print('\ndate: ' + str_today)
 
 # 조건8 예측정보 가져오기
 case8 = getCase8()
@@ -110,28 +130,18 @@ print('조건8', case8)
 worksheet = getGSpread()
 result = getCaseFromGSpread(worksheet)
 if result is None:
-    msg_telegram = '엑셀에서 ' + str_today + ' 데이터를 가져오지 못했습니다.'
-    bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=msg_telegram)
-    print(msg_telegram)
+    sendTelegramMsg('[오류] 엑셀에서 ' + str_today + ' 데이터를 가져오지 못했습니다.')
     exit()
-else:
-    case1, case7 = result
-    print('조건1', case1)
-    print('조건7', case7)
+case1, case7 = result
+print('조건1', case1)
+print('조건7', case7)
 
 # 오늘의 방향 결정
-dirToday = -1
-msg = '금일휴업'
-if case8 == case1:
-    dirToday = case1
-    msg = '10시매도'
-elif case8 == case7:
-    dirToday = case7
-    etime = etime2
-    msg = '종가매도'
+dirToday, sellType = decideStrategy(case1, case7, case8)
 
 if dirToday > -1:
-    msg += ', 방향: ' + str(dirToday)
+    etime = config['sell_time']
+    if sellType == 2: etime = config['sell_time2']
     
     # 매매할 종목
     stock_code = '122630'    # KODEX 레버리지
@@ -139,8 +149,7 @@ if dirToday > -1:
 
     write2StrategyFile(str_today, config['buy_time'], etime, stock_code, config['output_path'])
 
-msg_telegram = makeMessage(case1, case7, case8, worksheet)
+msg_telegram = makeMessage(str_today, dirToday, sellType, case1, case7, case8, worksheet)
     
 # 텔레그램으로 오늘의 작전 전송
-bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=msg_telegram)
-print(msg_telegram)
+sendTelegramMsg(msg_telegram)
