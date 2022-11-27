@@ -106,6 +106,7 @@ while True:
 
                 # 텔레그램으로 메시지 전송
                 bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='로그 갱신 오류')
-                time.sleep(60 * 5)
+
+                exit()
 
     time.sleep(30)
