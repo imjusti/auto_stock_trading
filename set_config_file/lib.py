@@ -42,7 +42,9 @@ def getCaseFromGSpread(worksheet, str_today, case1_colname, case7_colname):
 
 # 전략 결정
 def decideStrategy(case1, case7, case8):
+    # 방향(0: 하락, 1: 상승, -1: 휴업)
     dirToday = -1
+    # 매도시점(1: 10시, 2: 종가)
     sellType = 1
 
     if case8 == case1:
