@@ -49,9 +49,6 @@ def decideStrategy(case1, case7, case8):
 
     if case8 == case1:
         dirToday = case1
-    elif case8 == case7:
-        dirToday = case7
-        sellType = 2
 
     return (dirToday, sellType)
 
