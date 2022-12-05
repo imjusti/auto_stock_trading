@@ -1,0 +1,17 @@
+{
+  "trading_type": 9,
+
+  "buy_time": "08:51",
+  "sell_time": "10:01",
+  "sell_time2": "15:21",
+
+  "output_path": "C:/.../Strategy.json",
+
+  "case8_url": "https://...",
+
+  "google_spreadsheet_url": "https://docs.google.com/spreadsheets/...",
+  "google_spreadsheet_worksheet": "...",
+  "google_spreadsheet_case1_colname": "AA",
+  "google_spreadsheet_case5_colname": "AB",
+  "google_spreadsheet_case7_colname": "AC"
+}

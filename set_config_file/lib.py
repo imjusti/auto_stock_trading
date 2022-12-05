@@ -38,19 +38,30 @@ def getCaseFromGSpread(worksheet, str_today, case1_colname, case5_colname, case7
         case1 = int(worksheet.acell(case1_colname + str(cell.row)).value)
         case5 = int(worksheet.acell(case5_colname + str(cell.row)).value)
         case7 = int(worksheet.acell(case7_colname + str(cell.row)).value)
-        result = (case1, case5, case7)
+        result = {'조건1': case1, '조건5': case5, '조건7': case7}
     return result
 
 # 전략 결정
-def decideStrategy(cases):
+def decideStrategy(trading_type, cases):
     # 방향(0: 하락, 1: 상승, -1: 휴업)
     dirToday = -1
     # 매도시점(1: 10시, 2: 종가)
     sellType = 1
 
     # 조건9
-    if cases['조건8'] == cases['조건1]:
-        dirToday = cases['조건1]
+    if trading_type == 9:
+        if cases['조건8'] == cases['조건1']:
+            dirToday = cases['조건1']
+            sellType = 1
+    # 조건6
+    elif trading_type == 6:
+        if cases['조건5'] == cases['조건1']:
+            dirToday = cases['조건1']
+            sellType = 2
+    # 조건7
+    elif trading_type == 7:
+        dirToday = cases['조건7']
+        sellType = 2
 
     return (dirToday, sellType)
 

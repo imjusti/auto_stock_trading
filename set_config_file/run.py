@@ -22,22 +22,18 @@ str_today = datetime.date.today().strftime('%Y-%m-%d')
 print('\ndate: ' + str_today)
 
 
-# 조건8 예측정보 가져오기
-case8 = lib.getCase8(config['case8_url'])
-print('조건8', case8)
-
 # 조건1,5,7 예측정보 가져오기
 worksheet = lib.getGSpread(config['google_spreadsheet_url'], config['google_spreadsheet_worksheet'])
-result = lib.getCaseFromGSpread(worksheet, str_today, config['google_spreadsheet_case1_colname'], config['google_spreadsheet_case5_colname'], config['google_spreadsheet_case7_colname'])
-if result is None:
+cases = lib.getCaseFromGSpread(worksheet, str_today, config['google_spreadsheet_case1_colname'], config['google_spreadsheet_case5_colname'], config['google_spreadsheet_case7_colname'])
+if cases is None:
     lib.sendTelegramMsg(bot, cfg_telegram['chat_id'], '[오류] 엑셀에서 ' + str_today + ' 데이터를 가져오지 못했습니다.')
     exit()
-case1, case5, case7 = result
-cases = {'조건1': case1, '조건5': case5, '조건7': case7, '조건8': case8}
+# 조건8 예측정보 가져오기
+cases['조건8'] = lib.getCase8(config['case8_url'])
 print(cases)
 
 # 오늘의 방향 결정
-dirToday, sellType = lib.decideStrategy(cases)
+dirToday, sellType = lib.decideStrategy(config['trading_type'], cases)
 
 if dirToday > -1:
     etime = config['sell_time']
