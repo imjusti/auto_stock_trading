@@ -46,5 +46,5 @@ if dirToday > -1:
     lib.write2StrategyFile(str_today, config['buy_time'], etime, stock_code, config['output_path'])
 
 # 텔레그램으로 오늘의 작전 전송
-msg_telegram = lib.makeMessage(str_today, dirToday, sellType, cases, worksheet)
+msg_telegram = lib.makeMessage(str_today, dirToday, sellType, cases, worksheet, config['name'])
 lib.sendTelegramMsg(bot, cfg_telegram['chat_id'], msg_telegram)

@@ -78,16 +78,17 @@ def write2StrategyFile(str_today, buy_time, sell_time, stock_code, file_path):
         json.dump(data, outfile, indent=2)
         
 # 메시지 생성
-def makeMessage(str_today, dirToday, sellType, cases, worksheet):
+def makeMessage(str_today, dirToday, sellType, cases, worksheet, fundName):
     msg = '금일휴업'
     if dirToday > -1:
         if sellType == 1: msg = '10시매도'
         elif sellType == 2: msg = '종가매도'
         msg += ', 방향: ' + str(dirToday)
 
-    msg_telegram = ''
-    msg_telegram += '날짜: ' + str_today+ '\n'
-    msg_telegram += '[오늘의 작전] ' + msg + '\n'
+    msg_telegram = '** ' + fundName + ' **\n'
+    msg_telegram += '날짜: ' + str_today+ '\n\n'
+    msg_telegram += '[오늘의 작전]\n'
+    msg_telegram += msg + '\n'
     msg_telegram += '\n'
 
     # 각 조건값들 전송
