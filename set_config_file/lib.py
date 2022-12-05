@@ -42,14 +42,15 @@ def getCaseFromGSpread(worksheet, str_today, case1_colname, case5_colname, case7
     return result
 
 # 전략 결정
-def decideStrategy(case1, case5, case7, case8):
+def decideStrategy(cases):
     # 방향(0: 하락, 1: 상승, -1: 휴업)
     dirToday = -1
     # 매도시점(1: 10시, 2: 종가)
     sellType = 1
 
-    if case8 == case1:
-        dirToday = case1
+    # 조건9
+    if cases['조건8'] == cases['조건1]:
+        dirToday = cases['조건1]
 
     return (dirToday, sellType)
 
@@ -66,7 +67,7 @@ def write2StrategyFile(str_today, buy_time, sell_time, stock_code, file_path):
         json.dump(data, outfile, indent=2)
         
 # 메시지 생성
-def makeMessage(str_today, dirToday, sellType, case1, case5, case7, case8, worksheet):
+def makeMessage(str_today, dirToday, sellType, cases, worksheet):
     msg = '금일휴업'
     if dirToday > -1:
         if sellType == 1: msg = '10시매도'
@@ -80,10 +81,10 @@ def makeMessage(str_today, dirToday, sellType, case1, case5, case7, case8, works
 
     # 각 조건값들 전송
     msg_telegram += '[참고 조건값들]\n'
-    msg_telegram += '조건1: ' + str(case1) + '\n'
-    msg_telegram += '조건5: ' + str(case5) + '\n'
-    msg_telegram += '조건7: ' + str(case7) + '\n'
-    msg_telegram += '조건8: ' + str(case8) + '\n'
+    msg_telegram += '조건1: ' + str(cases['조건1']) + '\n'
+    msg_telegram += '조건5: ' + str(cases['조건5']) + '\n'
+    msg_telegram += '조건7: ' + str(cases['조건7']) + '\n'
+    msg_telegram += '조건8: ' + str(cases['조건8']) + '\n'
     msg_telegram += '\n'
 
     ## 추가정보
