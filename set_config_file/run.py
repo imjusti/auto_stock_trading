@@ -33,12 +33,11 @@ if result is None:
     lib.sendTelegramMsg(bot, cfg_telegram['chat_id'], '[오류] 엑셀에서 ' + str_today + ' 데이터를 가져오지 못했습니다.')
     exit()
 case1, case5, case7 = result
-print('조건1', case1)
-print('조건5', case5)
-print('조건7', case7)
+cases = {'조건1': case1, '조건5': case5, '조건7': case7, '조건8': case8}
+print(cases)
 
 # 오늘의 방향 결정
-dirToday, sellType = lib.decideStrategy(case1, case5, case7, case8)
+dirToday, sellType = lib.decideStrategy(cases)
 
 if dirToday > -1:
     etime = config['sell_time']
@@ -51,5 +50,5 @@ if dirToday > -1:
     lib.write2StrategyFile(str_today, config['buy_time'], etime, stock_code, config['output_path'])
 
 # 텔레그램으로 오늘의 작전 전송
-msg_telegram = lib.makeMessage(str_today, dirToday, sellType, case1, case5, case7, case8, worksheet)
+msg_telegram = lib.makeMessage(str_today, dirToday, sellType, cases, worksheet)
 lib.sendTelegramMsg(bot, cfg_telegram['chat_id'], msg_telegram)
