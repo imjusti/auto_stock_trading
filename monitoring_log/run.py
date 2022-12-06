@@ -8,6 +8,7 @@ import telegram
 import json
 import os
 
+
 # 로그파일 읽기
 def loadLogFile(filename):
     with open(filename, 'rt', encoding='UTF-8') as f:
