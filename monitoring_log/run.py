@@ -40,6 +40,13 @@ def getMessage(currStatus, status):
         strMessage = '매도주문 완료'
     return strMessage
 
+# 텔레그램 전송
+def sendTelegramMsg(fundName, bot, chat_id, msg):
+    last_msg = '** ' + fundName + ' **\n'
+    last_msg += msg
+    bot.sendMessage(chat_id=chat_id, text=last_msg)
+    print(last_msg)
+
 
 # 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
@@ -86,7 +93,7 @@ while True:
                 if status is not None: currStatus = status;
 
             if len(botMessage) > 0:
-                bot.sendMessage(chat_id=cfg_telegram['chat_id'], text=botMessage)
+                sendTelegramMsg(config['name'], bot, cfg_telegram['chat_id'], botMessage)
                 print(currTime, botMessage)
         print(currStatus)
 
@@ -106,7 +113,7 @@ while True:
                 print('error! 로그 갱신 안됨')
 
                 # 텔레그램으로 메시지 전송
-                bot.sendMessage(chat_id=cfg_telegram['chat_id'], text='로그 갱신 오류')
+                sendTelegramMsg(config['name'], bot, cfg_telegram['chat_id'], '로그 갱신 오류')
 
                 exit()
 
