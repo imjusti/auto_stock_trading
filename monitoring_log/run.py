@@ -108,7 +108,7 @@ while True:
             diff = datetime.datetime.now() - dtime;
             print(str(dtime) + ' diff:' + str(diff.seconds))
             errorSec = 120  # 120초 동안 로그 갱신이 안되면 에러
-            if currStatus == 'buying': errorSec = 60 * 10  # 매수주문 후에는 10분까지 괜찮음
+            if currStatus == 'buying': errorSec = 60 * 11  # 매수주문 후에는 11분까지 괜찮음
             if diff.seconds > errorSec:
                 print('error! 로그 갱신 안됨')
 
