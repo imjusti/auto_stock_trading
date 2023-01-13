@@ -66,6 +66,14 @@ def decideStrategy(trading_type, cases):
     elif trading_type == 7:
         dirToday = cases['조건7']
         sellType = 2
+    # 조건5
+    elif trading_type == 5:
+        dirToday = cases['조건5']
+        sellType = 2
+    # 조건1
+    elif trading_type == 1:
+        dirToday = cases['조건1']
+        sellType = 2
 
     return (dirToday, sellType)
 
