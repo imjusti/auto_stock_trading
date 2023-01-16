@@ -48,15 +48,14 @@ def decideStrategy(trading_type, cases):
     # 매도시점(1: 10시, 2: 종가)
     sellType = 1
 
-    # 조건8
-    if trading_type == 8:
-        dirToday = cases['조건8']
-        sellType = 1
-    # 조건9
-    elif trading_type == 9:
-        if cases['조건8'] == cases['조건1']:
-            dirToday = cases['조건1']
-            sellType = 1
+    # 조건1
+    if trading_type == 1:
+        dirToday = cases['조건1']
+        sellType = 2
+    # 조건5
+    elif trading_type == 5:
+        dirToday = cases['조건5']
+        sellType = 2
     # 조건6
     elif trading_type == 6:
         if cases['조건5'] == cases['조건1']:
@@ -66,14 +65,20 @@ def decideStrategy(trading_type, cases):
     elif trading_type == 7:
         dirToday = cases['조건7']
         sellType = 2
-    # 조건5
-    elif trading_type == 5:
-        dirToday = cases['조건5']
-        sellType = 2
-    # 조건1
-    elif trading_type == 1:
-        dirToday = cases['조건1']
-        sellType = 2
+    # 조건8
+    elif trading_type == 8:
+        dirToday = cases['조건8']
+        sellType = 1
+    # 조건9
+    elif trading_type == 9:
+        if cases['조건8'] == cases['조건1']:
+            dirToday = cases['조건8']
+            sellType = 1
+    # 조건11
+    elif trading_type == 11:
+        if cases['조건8'] == cases['조건5']:
+            dirToday = cases['조건8']
+            sellType = 1
 
     return (dirToday, sellType)
 
