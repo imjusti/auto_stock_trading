@@ -83,13 +83,13 @@ def decideStrategy(trading_type, cases):
     return (dirToday, sellType)
 
 # 전략파일 생성
-def write2StrategyFile(str_today, buy_time, sell_time, stock_code, file_path):
+def write2StrategyFile(str_today, buy_time, sell_time, stock_code, amount, file_path):
     data = {
         'time': str_today,
         'timeBuy': buy_time,
         'timeSel': sell_time,
         'Code': stock_code,
-        'Deposit': 0
+        'Deposit': amount
     }
     with open(file_path, 'w') as outfile:
         json.dump(data, outfile, indent=2)

@@ -40,10 +40,10 @@ if dirToday > -1:
     if sellType == 2: etime = config['sell_time2']
     
     # 매매할 종목
-    stock_code = '122630'    # KODEX 레버리지
-    if dirToday == 0: stock_code = '252710'    # TIGER 200선물인버스2X
+    stock_code = config['case1_stock_code']
+    if dirToday == 0: stock_code = config['case0_stock_code']
 
-    lib.write2StrategyFile(str_today, config['buy_time'], etime, stock_code, config['output_path'])
+    lib.write2StrategyFile(str_today, config['buy_time'], etime, stock_code, config['trading_amount'], config['output_path'])
 
 # 텔레그램으로 오늘의 작전 전송
 msg_telegram = lib.makeMessage(str_today, dirToday, sellType, cases, worksheet, config['name'])
