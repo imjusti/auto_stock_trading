@@ -1,0 +1,4 @@
+## 설정파일 제외
+*.json
+__pycache__
+chromedriver_win32
