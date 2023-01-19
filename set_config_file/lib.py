@@ -25,8 +25,8 @@ def getGSpread(url, worksheet_name):
 
 # 조건8 예측정보 가져오기
 def getCase8(url):
-    req = requests.get(url)
-    soup = BeautifulSoup(req.content, 'html.parser')
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'html.parser')
     result = soup.find(id='result')
     return int(result.string)
 
@@ -39,6 +39,16 @@ def getCaseFromGSpread(worksheet, str_today, case1_colname, case5_colname, case7
         case5 = int(worksheet.acell(case5_colname + str(cell.row)).value)
         case7 = int(worksheet.acell(case7_colname + str(cell.row)).value)
         result = {'조건1': case1, '조건5': case5, '조건7': case7}
+    return result
+
+# 조건1,5,7 예측정보 가져오기
+def getStrategy(url, str_today):
+    res = requests.get(url + str_today)
+    obj = res.json();
+    case1 = int(obj['case1'])
+    case5 = int(obj['case5'])
+    case7 = int(obj['case7'])
+    result = {'조건1': case1, '조건5': case5, '조건7': case7}
     return result
 
 # 전략 결정
@@ -95,7 +105,7 @@ def write2StrategyFile(str_today, buy_time, sell_time, stock_code, amount, file_
         json.dump(data, outfile, indent=2)
         
 # 메시지 생성
-def makeMessage(str_today, dirToday, sellType, cases, worksheet, fundName):
+def makeMessage(str_today, dirToday, sellType, cases, fundName):
     msg = '금일휴업'
     if dirToday > -1:
         if sellType == 1: msg = '10시매도'
@@ -115,22 +125,6 @@ def makeMessage(str_today, dirToday, sellType, cases, worksheet, fundName):
     msg_telegram += '조건7: ' + str(cases['조건7']) + '\n'
     msg_telegram += '조건8: ' + str(cases['조건8']) + '\n'
     msg_telegram += '\n'
-
-    ## 추가정보
-    cell = worksheet.find(str_today) 
-    if cell is not None:
-        # 최근 적중율
-        case8_hit = worksheet.acell('BJ' + str(cell.row - 1)).value
-        case9_hit = worksheet.acell('BO' + str(cell.row - 1)).value
-        case10_hit = worksheet.acell('BT' + str(cell.row - 1)).value
-        # MDD
-        case8_mdd = worksheet.acell('BI' + str(cell.row + 6)).value
-        case9_mdd = worksheet.acell('BN' + str(cell.row + 6)).value
-        case10_mdd = worksheet.acell('BS' + str(cell.row + 6)).value
-        msg_telegram += '[최근적중율, MDD]\n'
-        msg_telegram += '조건8: ' + str(case8_hit) + '%, ' + str(case8_mdd) + '\n'
-        msg_telegram += '조건9: ' + str(case9_hit) + '%, ' + str(case9_mdd) + '\n'
-        msg_telegram += '조건10: ' + str(case10_hit) + '%, ' + str(case10_mdd)
     
     return msg_telegram
 

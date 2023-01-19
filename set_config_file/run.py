@@ -1,8 +1,6 @@
 # [221028] 자동매매 프로그램 설정파일 세팅
 
 import datetime
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import telegram
 import json
 import os
@@ -23,11 +21,7 @@ print('\ndate: ' + str_today)
 
 
 # 조건1,5,7 예측정보 가져오기
-worksheet = lib.getGSpread(config['google_spreadsheet_url'], config['google_spreadsheet_worksheet'])
-cases = lib.getCaseFromGSpread(worksheet, str_today, config['google_spreadsheet_case1_colname'], config['google_spreadsheet_case5_colname'], config['google_spreadsheet_case7_colname'])
-if cases is None:
-    lib.sendTelegramMsg(bot, cfg_telegram['chat_id'], '[오류] 엑셀에서 ' + str_today + ' 데이터를 가져오지 못했습니다.')
-    exit()
+cases = lib.getStrategy(config['strategy_url'], str_today)
 # 조건8 예측정보 가져오기
 cases['조건8'] = lib.getCase8(config['case8_url'])
 print(cases)
@@ -46,5 +40,5 @@ if dirToday > -1:
     lib.write2StrategyFile(str_today, config['buy_time'], etime, stock_code, config['trading_amount'], config['output_path'])
 
 # 텔레그램으로 오늘의 작전 전송
-msg_telegram = lib.makeMessage(str_today, dirToday, sellType, cases, worksheet, config['name'])
+msg_telegram = lib.makeMessage(str_today, dirToday, sellType, cases, config['name'])
 lib.sendTelegramMsg(bot, cfg_telegram['chat_id'], msg_telegram)
