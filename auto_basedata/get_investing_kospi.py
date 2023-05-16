@@ -3,6 +3,8 @@
 import requests
 import json
 import os
+import telegram
+import asyncio
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
@@ -18,11 +20,25 @@ def txt2code(txt):
 
     return code
 
+# 텔레그램 전송
+async def sendTelegramMsg(fundName, bot, chat_id, msg):
+    last_msg = '** ' + fundName + ' **\n'
+    last_msg += msg
+    await bot.sendMessage(chat_id=chat_id, text=last_msg)
+    print(last_msg)
+    
+
 # 실행경로
 path = os.path.dirname(os.path.realpath(__file__))
+
 # 설정파일 읽기
 with open(path + '/config.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
+
+# 텔레그램 설정파일 읽기
+with open(path + '/telegram.json') as f:
+    cfg_telegram = json.load(f)
+bot = telegram.Bot(token=cfg_telegram['token'])
 
 # 크롬으로 페이지 긁어오기
 driver = webdriver.Chrome()
@@ -50,4 +66,7 @@ print('기술지표:' + str3)
 val = str(txt2code(str1)) + ',' + str(txt2code(str2)) + ',' + str(txt2code(str3))
 url = config['url_save_invesing_kospi'] + '&val=' + val
 res = requests.get(url)
-print(val, res)
+print(val, res.text)
+
+# 텔레그램으로 메시지 전송
+asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], val + ' ' + res.text))
