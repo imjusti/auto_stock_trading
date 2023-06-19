@@ -45,28 +45,54 @@ driver = webdriver.Chrome()
 driver.implicitly_wait(5)
 driver.get('https://kr.investing.com/indices/kospi-technical')
 sleep(3);
+
 # 일간자료 클릭
 driver.find_element(By.XPATH, '//*[@id="timePeriodsWidget"]/li[6]/a').click()
 sleep(1)
 html = driver.page_source
-
 # 페이지 파싱
 soup = BeautifulSoup(html, 'html.parser')
-html1 = soup.select('#techStudiesInnerWrap > div.summary > span')
-str1 = html1[0].get_text()
-print('요약:' + str1)
-html2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')
-str2 = html2[0].get_text()
-print('이동평균:' + str2)
-html3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')
-str3 = html3[0].get_text()
-print('기술지표:' + str3)
+day_str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
+print('요약:' + day_str1)
+day_str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
+print('이동평균:' + day_str2)
+day_str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
+print('기술지표:' + day_str3)
+
+# 주간자료 클릭
+driver.find_element(By.XPATH, '//*[@id="timePeriodsWidget"]/li[7]/a').click()
+sleep(1)
+html = driver.page_source
+# 페이지 파싱
+soup = BeautifulSoup(html, 'html.parser')
+week_str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
+print('요약:' + week_str1)
+week_str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
+print('이동평균:' + week_str2)
+week_str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
+print('기술지표:' + week_str3)
+
+# 월간자료 클릭
+driver.find_element(By.XPATH, '//*[@id="timePeriodsWidget"]/li[8]/a').click()
+sleep(1)
+html = driver.page_source
+# 페이지 파싱
+soup = BeautifulSoup(html, 'html.parser')
+month_str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
+print('요약:' + month_str1)
+month_str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
+print('이동평균:' + month_str2)
+month_str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
+print('기술지표:' + month_str3)
 
 # 서버로 전송
-val = str(txt2code(str1)) + ',' + str(txt2code(str2)) + ',' + str(txt2code(str3))
-url = config['url_save_invesing_kospi'] + '&val=' + val
+day_val = str(txt2code(day_str1)) + ',' + str(txt2code(day_str2)) + ',' + str(txt2code(day_str3))
+week_val = str(txt2code(week_str1)) + ',' + str(txt2code(week_str2)) + ',' + str(txt2code(week_str3))
+month_val = str(txt2code(month_str1)) + ',' + str(txt2code(month_str2)) + ',' + str(txt2code(month_str3))
+url = config['url_save_invesing_kospi'] + '&day_val=' + day_val + '&week_val=' + week_val + '&month_val=' + month_val
 res = requests.get(url)
-print(val, res.text)
+print(day_val, res.text)
 
 # 텔레그램으로 메시지 전송
-asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], val + ' ' + res.text))
+msg = '일간: ' + day_val + '\n' + '주간: ' + week_val + '\n' + '월간: ' + month_val + '\nresult: ' + res.text
+asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], msg))
