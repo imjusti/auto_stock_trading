@@ -17,8 +17,22 @@ def txt2code(txt):
     elif txt == '적극 매수': code = 2
     elif txt == '매도': code = -1
     elif txt == '적극 매도': code = -2
-
     return code
+
+def getCodes(driver, xpath):
+    # 자료 클릭
+    driver.find_element(By.XPATH, xpath).click()
+    sleep(1)
+    html = driver.page_source
+    # 페이지 파싱
+    soup = BeautifulSoup(html, 'html.parser')
+    str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
+    print('요약:' + str1)
+    str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
+    print('이동평균:' + str2)
+    str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
+    print('기술지표:' + str3)
+    return [str1, str2, str3]
 
 # 텔레그램 전송
 async def sendTelegramMsg(fundName, bot, chat_id, msg):
@@ -46,53 +60,35 @@ driver.implicitly_wait(5)
 driver.get('https://kr.investing.com/indices/kospi-technical')
 sleep(3);
 
-# 일간자료 클릭
-driver.find_element(By.XPATH, '//*[@id="timePeriodsWidget"]/li[6]/a').click()
-sleep(1)
-html = driver.page_source
-# 페이지 파싱
-soup = BeautifulSoup(html, 'html.parser')
-day_str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
-print('요약:' + day_str1)
-day_str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
-print('이동평균:' + day_str2)
-day_str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
-print('기술지표:' + day_str3)
-
-# 주간자료 클릭
-driver.find_element(By.XPATH, '//*[@id="timePeriodsWidget"]/li[7]/a').click()
-sleep(1)
-html = driver.page_source
-# 페이지 파싱
-soup = BeautifulSoup(html, 'html.parser')
-week_str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
-print('요약:' + week_str1)
-week_str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
-print('이동평균:' + week_str2)
-week_str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
-print('기술지표:' + week_str3)
-
-# 월간자료 클릭
-driver.find_element(By.XPATH, '//*[@id="timePeriodsWidget"]/li[8]/a').click()
-sleep(1)
-html = driver.page_source
-# 페이지 파싱
-soup = BeautifulSoup(html, 'html.parser')
-month_str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
-print('요약:' + month_str1)
-month_str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
-print('이동평균:' + month_str2)
-month_str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
-print('기술지표:' + month_str3)
+# 5분자료
+arr_5min = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[1]/a')
+# 15분자료
+arr_15min = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[2]/a')
+# 30분자료
+arr_30min = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[3]/a')
+# 1시간자료
+arr_1hour = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[4]/a')
+# 5시간자료
+arr_5hour = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[5]/a')
+# 일간자료
+arr_day = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[6]/a')
+# 주간자료
+arr_week = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[7]/a')
+# 월간자료
+arr_month = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[8]/a')
 
 # 서버로 전송
-day_val = str(txt2code(day_str1)) + ',' + str(txt2code(day_str2)) + ',' + str(txt2code(day_str3))
-week_val = str(txt2code(week_str1)) + ',' + str(txt2code(week_str2)) + ',' + str(txt2code(week_str3))
-month_val = str(txt2code(month_str1)) + ',' + str(txt2code(month_str2)) + ',' + str(txt2code(month_str3))
-url = config['url_save_invesing_kospi'] + '&day_val=' + day_val + '&week_val=' + week_val + '&month_val=' + month_val
+val_5min = str(txt2code(arr_5min[0])) + ',' + str(txt2code(arr_5min[1])) + ',' + str(txt2code(arr_5min[2]))
+val_15min = str(txt2code(arr_15min[0])) + ',' + str(txt2code(arr_15min[1])) + ',' + str(txt2code(arr_15min[2]))
+val_30min = str(txt2code(arr_30min[0])) + ',' + str(txt2code(arr_30min[1])) + ',' + str(txt2code(arr_30min[2]))
+val_1hour = str(txt2code(arr_1hour[0])) + ',' + str(txt2code(arr_1hour[1])) + ',' + str(txt2code(arr_1hour[2]))
+val_5hour = str(txt2code(arr_5hour[0])) + ',' + str(txt2code(arr_5hour[1])) + ',' + str(txt2code(arr_5hour[2]))
+val_day = str(txt2code(arr_day[0])) + ',' + str(txt2code(arr_day[1])) + ',' + str(txt2code(arr_day[2]))
+val_week = str(txt2code(arr_week[0])) + ',' + str(txt2code(arr_week[1])) + ',' + str(txt2code(arr_week[2]))
+val_month = str(txt2code(arr_month[0])) + ',' + str(txt2code(arr_month[1])) + ',' + str(txt2code(arr_month[2]))
+url = config['url_save_invesing_kospi'] + '&5min_val=' + val_5min + '&15min_val=' + val_15min + '&30min_val=' + val_30min + '&1hour_val=' + val_1hour + '&5hour_val=' + val_5hour + '&day_val=' + val_day + '&week_val=' + val_week + '&month_val=' + val_month
 res = requests.get(url)
-print(day_val, res.text)
 
 # 텔레그램으로 메시지 전송
-msg = '일간: ' + day_val + '\n' + '주간: ' + week_val + '\n' + '월간: ' + month_val + '\nresult: ' + res.text
+msg = '5분: ' + val_5min + '\n15분: ' + val_15min + '\n30분: ' + val_30min + '\n1시간: ' + val_1hour + '\n5시간: ' + val_5hour + '\n일간: ' + val_day + '\n주간: ' + val_week + '\n월간: ' + val_month + '\nresult: ' + res.text
 asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], msg))
