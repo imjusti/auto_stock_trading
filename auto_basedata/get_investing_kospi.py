@@ -86,9 +86,10 @@ val_5hour = str(txt2code(arr_5hour[0])) + ',' + str(txt2code(arr_5hour[1])) + ',
 val_day = str(txt2code(arr_day[0])) + ',' + str(txt2code(arr_day[1])) + ',' + str(txt2code(arr_day[2]))
 val_week = str(txt2code(arr_week[0])) + ',' + str(txt2code(arr_week[1])) + ',' + str(txt2code(arr_week[2]))
 val_month = str(txt2code(arr_month[0])) + ',' + str(txt2code(arr_month[1])) + ',' + str(txt2code(arr_month[2]))
-url = config['url_save_invesing_kospi'] + '&5min_val=' + val_5min + '&15min_val=' + val_15min + '&30min_val=' + val_30min + '&1hour_val=' + val_1hour + '&5hour_val=' + val_5hour + '&day_val=' + val_day + '&week_val=' + val_week + '&month_val=' + val_month
+url = config['url_save_invesing_kospi'] + '&'.join(['', '5min_val=' + val_5min, '15min_val=' + val_15min, '30min_val=' + val_30min, '1hour_val=' + val_1hour, '5hour_val=' + val_5hour, 'day_val=' + val_day, 'week_val=' + val_week, 'month_val=' + val_month])
 res = requests.get(url)
+print(url, res.text)
 
 # 텔레그램으로 메시지 전송
-msg = '5분: ' + val_5min + '\n15분: ' + val_15min + '\n30분: ' + val_30min + '\n1시간: ' + val_1hour + '\n5시간: ' + val_5hour + '\n일간: ' + val_day + '\n주간: ' + val_week + '\n월간: ' + val_month + '\nresult: ' + res.text
+msg = '\n'.join(['5분: ' + val_5min, '15분: ' + val_15min, '30분: ' + val_30min, '1시간: ' + val_1hour, '5시간: ' + val_5hour, '일간: ' + val_day, '주간: ' + val_week, '월간: ' + val_month, 'result: ' + res.text])
 asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], msg))
