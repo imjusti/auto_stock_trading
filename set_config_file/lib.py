@@ -84,6 +84,14 @@ def decideStrategy(trading_type, cases):
         if cases['조건8'] == cases['조건1']:
             dirToday = cases['조건8']
             sellType = 1
+    # 조건10
+    elif trading_type == 10:
+        if cases['조건8'] == cases['조건1']:
+            dirToday = cases['조건8']
+            sellType = 1
+        elif cases['조건8'] == cases['조건7']:
+            dirToday = cases['조건8']
+            sellType = 2
     # 조건11
     elif trading_type == 11:
         if cases['조건8'] == cases['조건5']:
