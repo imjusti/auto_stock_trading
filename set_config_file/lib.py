@@ -78,7 +78,7 @@ def decideStrategy(trading_type, cases):
     # 조건8
     elif trading_type == 8:
         dirToday = cases['조건8']
-        sellType = 1
+        sellType = 2
     # 조건9
     elif trading_type == 9:
         if cases['조건8'] == cases['조건1']:
@@ -96,15 +96,15 @@ def decideStrategy(trading_type, cases):
     elif trading_type == 11:
         if cases['조건8'] == cases['조건5']:
             dirToday = cases['조건8']
-            sellType = 1
+            sellType = 2
     # 조건12
     elif trading_type == 12:
         if cases['조건8'] == cases['조건5']:
             dirToday = cases['조건8']
-            sellType = 1
+            sellType = 2
         elif cases['조건8'] == cases['조건1']:
             dirToday = cases['조건8']
-            sellType = 1
+            sellType = 2
 
     return (dirToday, sellType)
 
