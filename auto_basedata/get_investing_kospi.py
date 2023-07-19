@@ -22,7 +22,7 @@ def txt2code(txt):
 def getCodes(driver, xpath):
     # 자료 클릭
     driver.find_element(By.XPATH, xpath).click()
-    sleep(1)
+    sleep(3)
     html = driver.page_source
     # 페이지 파싱
     soup = BeautifulSoup(html, 'html.parser')
