@@ -31,11 +31,11 @@ def getCodes(driver, xpath):
     html = driver.page_source
     # 페이지 파싱
     soup = BeautifulSoup(html, 'html.parser')
-    str1 = soup.select('#techStudiesInnerWrap > div.summary > span')[0].get_text()
+    str1 = soup.select('#__next > div.desktop\:relative > div.pt-5 > div:nth-child(1) > div:nth-child(6) > div > div:nth-child(2) > div:nth-child(1) > div.mb-6 > h2 > span:nth-child(2)')[0].get_text()
     print('요약:' + str1)
-    str2 = soup.select('#techStudiesInnerWrap > div:nth-child(2) > span.bold')[0].get_text()
+    str2 = soup.select('#__next > div.desktop\:relative > div.pt-5 > div:nth-child(1) > div:nth-child(6) > div > div:nth-child(2) > div:nth-child(1) > div.mb-6 > div > div > table > tbody > tr:nth-child(1) > td:nth-child(2)')[0].get_text()
     print('이동평균:' + str2)
-    str3 = soup.select('#techStudiesInnerWrap > div:nth-child(3) > span.bold')[0].get_text()
+    str3 = soup.select('#__next > div.desktop\:relative > div.pt-5 > div:nth-child(1) > div:nth-child(6) > div > div:nth-child(2) > div:nth-child(1) > div.mb-6 > div > div > table > tbody > tr:nth-child(2) > td:nth-child(2)')[0].get_text()
     print('기술지표:' + str3)
     return [str1, str2, str3]
 
@@ -64,23 +64,25 @@ driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().
 driver.implicitly_wait(5)
 driver.get('https://kr.investing.com/indices/kospi-technical')
 sleep(3);
+driver.execute_script("window.scrollTo(0, 800)")
+sleep(1);
 
 # 5분자료
-arr_5min = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[1]/a')
+arr_5min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[1]')
 # 15분자료
-arr_15min = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[2]/a')
+arr_15min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[2]')
 # 30분자료
-arr_30min = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[3]/a')
+arr_30min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[3]')
 # 1시간자료
-arr_1hour = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[4]/a')
+arr_1hour = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[4]')
 # 5시간자료
-arr_5hour = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[5]/a')
+arr_5hour = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[5]')
 # 일간자료
-arr_day = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[6]/a')
+arr_day = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[6]')
 # 주간자료
-arr_week = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[7]/a')
+arr_week = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[7]')
 # 월간자료
-arr_month = getCodes(driver, '//*[@id="timePeriodsWidget"]/li[8]/a')
+arr_month = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[8]')
 
 # 서버로 전송
 val_5min = str(txt2code(arr_5min[0])) + ',' + str(txt2code(arr_5min[1])) + ',' + str(txt2code(arr_5min[2]))
