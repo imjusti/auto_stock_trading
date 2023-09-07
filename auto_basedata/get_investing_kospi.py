@@ -31,12 +31,24 @@ def getCodes(driver, xpath):
     html = driver.page_source
     # 페이지 파싱
     soup = BeautifulSoup(html, 'html.parser')
-    str1 = soup.select('#__next > div.desktop\:relative > div.pt-5 > div:nth-child(1) > div:nth-child(6) > div > div:nth-child(2) > div:nth-child(1) > div.mb-6 > h2 > span:nth-child(2)')[0].get_text()
+
+    str = soup.select('div[data-test="timeframe-selection"] > div:nth-child(2) > div > div')[0].get_text()
+    
+    pos1 = str.find('요약')
+    str0 = str[pos1 + 2 + 16:pos1 + 2 + 30]
+    str1 = str0[0:str0.find('매수:')]
     print('요약:' + str1)
-    str2 = soup.select('#__next > div.desktop\:relative > div.pt-5 > div:nth-child(1) > div:nth-child(6) > div > div:nth-child(2) > div:nth-child(1) > div.mb-6 > div > div > table > tbody > tr:nth-child(1) > td:nth-child(2)')[0].get_text()
+
+    pos1 = str.find('이동평균')
+    str0 = str[pos1 + 4 + 16:pos1 + 4 + 30]
+    str2 = str0[0:str0.find('매수:')]
     print('이동평균:' + str2)
-    str3 = soup.select('#__next > div.desktop\:relative > div.pt-5 > div:nth-child(1) > div:nth-child(6) > div > div:nth-child(2) > div:nth-child(1) > div.mb-6 > div > div > table > tbody > tr:nth-child(2) > td:nth-child(2)')[0].get_text()
+
+    pos1 = str.find('기술적 지표')
+    str0 = str[pos1 + 6 + 16:pos1 + 6 + 30]
+    str3 = str0[0:str0.find('매수:')]
     print('기술지표:' + str3)
+    
     return [str1, str2, str3]
 
 # 텔레그램 전송
