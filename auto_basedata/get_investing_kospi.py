@@ -77,7 +77,7 @@ driver.implicitly_wait(5)
 driver.get('https://kr.investing.com/indices/kospi-technical')
 sleep(3);
 driver.execute_script("window.scrollTo(0, 800)")
-sleep(1);
+sleep(3);
 
 # 5분자료
 arr_5min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[1]')
