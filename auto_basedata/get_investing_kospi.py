@@ -24,9 +24,9 @@ def txt2code(txt):
     elif txt == '적극 매도': code = -2
     return code
 
-def getCodes(driver, xpath):
+def getCodes(driver, selector):
     # 자료 클릭
-    driver.find_element(By.XPATH, xpath).click()
+    driver.find_element(By.CSS_SELECTOR, selector).click()
     sleep(3)
     html = driver.page_source
     # 페이지 파싱
@@ -76,25 +76,27 @@ driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().
 driver.implicitly_wait(5)
 driver.get('https://kr.investing.com/indices/kospi-technical')
 sleep(3);
-driver.execute_script("window.scrollTo(0, 800)")
+driver.execute_script("window.scrollTo(0, 700)")
 sleep(3);
 
 # 5분자료
-arr_5min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[1]')
+arr_5min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(1)')
 # 15분자료
-arr_15min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[2]')
+arr_15min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(2)')
 # 30분자료
-arr_30min = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[3]')
+arr_30min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(3)')
 # 1시간자료
-arr_1hour = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[4]')
+arr_1hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(4)')
 # 5시간자료
-arr_5hour = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[5]')
+arr_5hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(5)')
 # 일간자료
-arr_day = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[6]')
+arr_day = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(6)')
 # 주간자료
-arr_week = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[7]')
+arr_week = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(7)')
 # 월간자료
-arr_month = getCodes(driver, '//*[@id="__next"]/div[2]/div[2]/div[1]/div[4]/div/div[1]/div/button[8]')
+arr_month = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(8)')
+
+driver.quit()
 
 # 서버로 전송
 val_5min = str(txt2code(arr_5min[0])) + ',' + str(txt2code(arr_5min[1])) + ',' + str(txt2code(arr_5min[2]))
