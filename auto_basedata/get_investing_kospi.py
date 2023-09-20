@@ -113,4 +113,8 @@ print(url, res.text)
 
 # 텔레그램으로 메시지 전송
 msg = '\n'.join(['5분: ' + val_5min, '15분: ' + val_15min, '30분: ' + val_30min, '1시간: ' + val_1hour, '5시간: ' + val_5hour, '일간: ' + val_day, '주간: ' + val_week, '월간: ' + val_month, 'result: ' + res.text])
+# 포지션 변경시 알림 표시
+if res.text == '1' or res.text == '0':
+    msg = msg + '\n\n!! 새 포지션 !! ' + res.text
 asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], msg))
+
