@@ -45,10 +45,14 @@ def getCaseFromGSpread(worksheet, str_today, case1_colname, case5_colname, case7
 def getStrategy(url, str_today):
     res = requests.get(url + str_today)
     obj = res.json();
+
     case1 = int(obj['case1'])
-    case2 = int(obj['case2'])
     case5 = int(obj['case5'])
     case7 = int(obj['case7'])
+
+    case2 = ''
+    if obj['case2'] is not None: case2 = int(obj['case2'])
+        
     result = {'조건1': case1, '조건2': case2, '조건5': case5, '조건7': case7}
     return result
 
