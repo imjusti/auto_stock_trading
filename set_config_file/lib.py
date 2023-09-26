@@ -81,10 +81,11 @@ def decideStrategy(trading_type, cases):
         dirToday = cases['조건8']
         sellType = 2
     # 조건9
+    # 23.09.26 종가매도로 변경
     elif trading_type == 9:
         if cases['조건8'] == cases['조건2']:
             dirToday = cases['조건8']
-            sellType = 1
+            sellType = 2
     # 조건11
     elif trading_type == 11:
         if cases['조건8'] == cases['조건5']:
