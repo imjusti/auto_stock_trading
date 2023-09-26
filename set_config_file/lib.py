@@ -41,14 +41,15 @@ def getCaseFromGSpread(worksheet, str_today, case1_colname, case5_colname, case7
         result = {'조건1': case1, '조건5': case5, '조건7': case7}
     return result
 
-# 조건1,5,7 예측정보 가져오기
+# 조건1,2,5,7 예측정보 가져오기
 def getStrategy(url, str_today):
     res = requests.get(url + str_today)
     obj = res.json();
     case1 = int(obj['case1'])
+    case2 = int(obj['case2'])
     case5 = int(obj['case5'])
     case7 = int(obj['case7'])
-    result = {'조건1': case1, '조건5': case5, '조건7': case7}
+    result = {'조건1': case1, '조건2': case2, '조건5': case5, '조건7': case7}
     return result
 
 # 전략 결정
@@ -81,17 +82,9 @@ def decideStrategy(trading_type, cases):
         sellType = 2
     # 조건9
     elif trading_type == 9:
-        if cases['조건8'] == cases['조건1']:
+        if cases['조건8'] == cases['조건2']:
             dirToday = cases['조건8']
             sellType = 1
-    # 조건10
-    elif trading_type == 10:
-        if cases['조건8'] == cases['조건1']:
-            dirToday = cases['조건8']
-            sellType = 1
-        elif cases['조건8'] == cases['조건5']:
-            dirToday = cases['조건8']
-            sellType = 2
     # 조건11
     elif trading_type == 11:
         if cases['조건8'] == cases['조건5']:
@@ -102,7 +95,7 @@ def decideStrategy(trading_type, cases):
         if cases['조건8'] == cases['조건5']:
             dirToday = cases['조건8']
             sellType = 2
-        elif cases['조건8'] == cases['조건1']:
+        elif cases['조건8'] == cases['조건2']:
             dirToday = cases['조건8']
             sellType = 2
 
@@ -137,6 +130,7 @@ def makeMessage(str_today, dirToday, sellType, cases, fundName):
     # 각 조건값들 전송
     msg_telegram += '[참고 조건값들]\n'
     msg_telegram += '조건1: ' + str(cases['조건1']) + '\n'
+    msg_telegram += '조건2: ' + str(cases['조건2']) + '\n'
     msg_telegram += '조건5: ' + str(cases['조건5']) + '\n'
     msg_telegram += '조건7: ' + str(cases['조건7']) + '\n'
     msg_telegram += '조건8: ' + str(cases['조건8']) + '\n'
