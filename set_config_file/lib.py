@@ -8,21 +8,6 @@ import json
 import os
 
 
-# 구글 스프레드시트 가져오기
-def getGSpread(url, worksheet_name):
-    path = os.path.dirname(os.path.realpath(__file__))
-    
-    scope = [
-        'https://spreadsheets.google.com/feeds',
-        'https://www.googleapis.com/auth/drive',
-    ]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(path + '/google-docs-key.json', scope)
-    gc = gspread.authorize(credentials)
-    doc = gc.open_by_url(url)
-    worksheet = doc.worksheet(worksheet_name)
-    
-    return worksheet
-
 # 조건8 예측정보 가져오기
 def getCase8(url):
     res = requests.get(url)
