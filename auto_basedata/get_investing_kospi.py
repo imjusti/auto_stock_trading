@@ -80,21 +80,21 @@ driver.execute_script("window.scrollTo(0, 700)")
 sleep(3);
 
 # 5분자료
-arr_5min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(1)')
+arr_5min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(2)')
 # 15분자료
-arr_15min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(2)')
+arr_15min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(3)')
 # 30분자료
-arr_30min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(3)')
+arr_30min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(4)')
 # 1시간자료
-arr_1hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(4)')
+arr_1hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(5)')
 # 5시간자료
-arr_5hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(5)')
+arr_5hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(6)')
 # 일간자료
-arr_day = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(6)')
+arr_day = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(7)')
 # 주간자료
-arr_week = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(7)')
+arr_week = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(8)')
 # 월간자료
-arr_month = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(8)')
+arr_month = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(9)')
 
 driver.quit()
 
