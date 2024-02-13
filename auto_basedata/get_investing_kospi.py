@@ -80,21 +80,21 @@ driver.execute_script("window.scrollTo(0, 700)")
 sleep(3);
 
 # 5분자료
-arr_5min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(2)')
+arr_5min = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(2)')
 # 15분자료
-arr_15min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(3)')
+arr_15min = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(3)')
 # 30분자료
-arr_30min = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(4)')
+arr_30min = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(4)')
 # 1시간자료
-arr_1hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(5)')
+arr_1hour = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(5)')
 # 5시간자료
-arr_5hour = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(6)')
+arr_5hour = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(6)')
 # 일간자료
-arr_day = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(7)')
+arr_day = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(7)')
 # 주간자료
-arr_week = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(8)')
+arr_week = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(8)')
 # 월간자료
-arr_month = getCodes(driver, 'div[data-test="timeframe-selection"] .inv-tab-bar button:nth-child(9)')
+arr_month = getCodes(driver, 'div[data-test="timeframe-selection"] [role="tablist"] button:nth-child(9)')
 
 driver.quit()
 
@@ -112,7 +112,7 @@ res = requests.get(url)
 print(url, res.text)
 
 # 텔레그램으로 메시지 전송
-msg = '\n'.join(['5분: ' + val_5min, '15분: ' + val_15min, '30분: ' + val_30min, '1시간: ' + val_1hour, '5시간: ' + val_5hour, '일간: ' + val_day, '주간: ' + val_week, '월간: ' + val_month, 'result: ' + res.text])
+msg = '\n'.join(['순서: 요약,이동,기술', '5분: ' + val_5min, '15분: ' + val_15min, '30분: ' + val_30min, '1시간: ' + val_1hour, '5시간: ' + val_5hour, '일간: ' + val_day, '주간: ' + val_week, '월간: ' + val_month, 'result: ' + res.text])
 # 포지션 변경시 알림 표시
 if res.text == '1' or res.text == '0':
     msg = msg + '\n\n!! 새 포지션 !! ' + res.text
