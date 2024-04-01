@@ -1,6 +1,6 @@
 {
   "name": "fund #1",
-  "trading_type": 9,
+  "trading_type": "9",
   "trading_amount": 0,
 
   "buy_time": "08:51",
