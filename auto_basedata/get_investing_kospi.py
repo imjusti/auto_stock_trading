@@ -36,18 +36,19 @@ def getCodes(driver, selector):
     
     pos1 = str.find('요약')
     str0 = str[pos1 + 2 + 16:pos1 + 2 + 30]
-    str1 = str0[0:str0.find('매수:')]
+    str1 = str0[0:str0.find('기술적 지표')]
     print('요약:' + str1)
-
-    pos1 = str.find('이동평균')
-    str0 = str[pos1 + 4 + 16:pos1 + 4 + 30]
-    str2 = str0[0:str0.find('매수:')]
-    print('이동평균:' + str2)
 
     pos1 = str.find('기술적 지표')
     str0 = str[pos1 + 6 + 16:pos1 + 6 + 30]
-    str3 = str0[0:str0.find('매수:')]
+    str3 = str0[0:str0.find('이동평균')]
     print('기술지표:' + str3)
+
+    pos1 = str.find('이동평균')
+    str0 = str[pos1 + 4 + 16:pos1 + 4 + 30]
+    str2 = str0[0:]
+    print('이동평균:' + str2)
+    
     
     return [str1, str2, str3]
 
