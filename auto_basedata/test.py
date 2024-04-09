@@ -49,6 +49,7 @@ def getCodes(driver, url):
 
     return [code_summary, code_moving, code_indicator]
 
+
 # 텔레그램 전송
 async def sendTelegramMsg(fundName, bot, chat_id, msg):
     last_msg = '** ' + fundName + ' **\n'
@@ -69,16 +70,11 @@ with open(path + '/telegram.json') as f:
     cfg_telegram = json.load(f)
 bot = telegram.Bot(token=cfg_telegram['token'])
 
+
 # 크롬으로 페이지 긁어오기
 driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().install()))
 driver.implicitly_wait(5)
 
-# 5분 자료
-arr_5min = getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/5m')
-# 15분 자료
-arr_15min = getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/15m')
-# 30분 자료
-arr_30min = getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/30m')
 # 1시간 자료
 arr_1hour = getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1h')
 # 5시간 자료
@@ -92,23 +88,7 @@ arr_month = getCodes(driver, 'https://api.investing.com/api/financialdata/techni
 
 driver.quit()
 
-# 서버로 전송
-val_5min = ','.join(arr_5min)
-val_15min = ','.join(arr_15min)
-val_30min = ','.join(arr_30min)
 val_1hour = ','.join(arr_1hour)
-val_5hour = ','.join(arr_5hour)
-val_day = ','.join(arr_day)
-val_week = ','.join(arr_week)
-val_month = ','.join(arr_month)
-url = config['url_save_invesing_kospi'] + '&'.join(['', '5min_val=' + val_5min, '15min_val=' + val_15min, '30min_val=' + val_30min, '1hour_val=' + val_1hour, '5hour_val=' + val_5hour, 'day_val=' + val_day, 'week_val=' + val_week, 'month_val=' + val_month])
-res = requests.get(url)
-print(url, res.text)
+print(val_1hour)
 
-# 텔레그램으로 메시지 전송
-msg = '\n'.join(['순서: 요약,이동,기술', '5분: ' + val_5min, '15분: ' + val_15min, '30분: ' + val_30min, '1시간: ' + val_1hour, '5시간: ' + val_5hour, '일간: ' + val_day, '주간: ' + val_week, '월간: ' + val_month, 'result: ' + res.text])
-# 포지션 변경시 알림 표시
-if res.text == '1' or res.text == '0':
-    msg = msg + '\n\n!! 새 포지션 !! ' + res.text
-asyncio.run(sendTelegramMsg('조건90', bot, cfg_telegram['chat_id'], msg))
 
