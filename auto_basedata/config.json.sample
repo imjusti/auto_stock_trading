@@ -1,5 +1,6 @@
 {
     "url": "https://...",
     "url_calc_world_index": "https://...",
-    "url_save_invesing_kospi": "https://..."
+    "url_save_invesing_kospi": "https://...",
+    "url_save_invesing_kosdaq": "https://..."
 }

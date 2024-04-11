@@ -1,4 +1,4 @@
-# 인베스팅닷컴의 코스피지수 기술적 분석값 긁어오기
+# 인베스팅닷컴의 코스닥지수 기술적 분석값 긁어오기
 
 import requests
 import json
@@ -32,26 +32,26 @@ driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().
 driver.implicitly_wait(5)
 
 # 5분 자료
-arr_5min = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/5m')
+arr_5min = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/5m')
 # 15분 자료
-arr_15min = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/15m')
+arr_15min = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/15m')
 # 30분 자료
-arr_30min = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/30m')
+arr_30min = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/30m')
 # 1시간 자료
-arr_1hour = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1h')
+arr_1hour = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/1h')
 # 5시간 자료
-arr_5hour = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/5h')
+arr_5hour = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/5h')
 # 일간 자료
-arr_day = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1d')
+arr_day = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/1d')
 # 주간 자료
-arr_week = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1w')
+arr_week = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/1w')
 # 월간 자료
-arr_month = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1mo')
+arr_month = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/38016/1mo')
 
 driver.quit()
 
 # 서버로 전송
-url = config['url_save_invesing_kospi'] + '&'.join([
+url = config['url_save_invesing_kosdaq'] + '&'.join([
     '',
     '5min_val=' + ','.join(arr_5min),
     '15min_val=' + ','.join(arr_15min),
@@ -80,5 +80,5 @@ msg = '\n'.join([
 ])
 # 포지션 변경시 알림 표시
 if res.text == '1' or res.text == '0': msg = msg + '\n\n!! 새 포지션 !! ' + res.text
-asyncio.run(lib.sendTelegramMsg('조건90(KOSPI)', bot, cfg_telegram['chat_id'], msg))
+asyncio.run(lib.sendTelegramMsg('조건90(KOSDAQ)', bot, cfg_telegram['chat_id'], msg))
 
