@@ -8,14 +8,7 @@ import json
 import os
 
 
-# 조건8 예측정보 가져오기
-def getCase8(url):
-    res = requests.get(url)
-    soup = BeautifulSoup(res.text, 'html.parser')
-    result = soup.find(id='result')
-    return int(result.string)
-
-# 조건1,2,5,7,필터1 예측정보 가져오기
+# 조건1,2,5,7,8,150,150x2,필터1 예측정보 가져오기
 def getStrategy(url, str_today):
     res = requests.get(url + str_today)
     obj = res.json();
@@ -23,12 +16,17 @@ def getStrategy(url, str_today):
     case1 = int(obj['case1'])
     case5 = int(obj['case5'])
     case7 = int(obj['case7'])
+    case8 = int(obj['case8'])
+
+    range150 = int(obj['range150'])
+    range150x2 = int(obj['range150x2'])
+    
     filter1 = int(obj['filter1'])
 
     case2 = ''
     if obj['case2'] is not None: case2 = int(obj['case2'])
         
-    result = {'조건1': case1, '조건2': case2, '조건5': case5, '조건7': case7, '필터1': filter1}
+    result = {'조건1': case1, '조건2': case2, '조건5': case5, '조건7': case7, '조건8': case8, '범위150': range150, '범위150x2': range150x2, '필터1': filter1}
     return result
 
 # 전략 결정
@@ -104,6 +102,8 @@ def makeMessage(str_today, dirToday, sellType, cases, fundName):
     msg_telegram += '조건7: ' + str(cases['조건7']) + '\n'
     msg_telegram += '조건8: ' + str(cases['조건8']) + '\n'
     msg_telegram += '필터1: ' + str(cases['필터1']) + '\n'
+    msg_telegram += '범위150: ' + str(cases['범위150']) + '\n'
+    msg_telegram += '범위150x2: ' + str(cases['범위150x2']) + '\n'
     msg_telegram += '\n'
     
     return msg_telegram

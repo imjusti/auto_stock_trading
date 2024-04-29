@@ -20,10 +20,8 @@ str_today = datetime.date.today().strftime('%Y-%m-%d')
 print('\ndate: ' + str_today)
 
 
-# 조건1,5,7 예측정보 가져오기
+# 예측정보 가져오기
 cases = lib.getStrategy(config['strategy_url'], str_today)
-# 조건8 예측정보 가져오기
-cases['조건8'] = lib.getCase8(config['case8_url'])
 print(cases)
 
 # 오늘의 방향 결정
