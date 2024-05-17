@@ -64,7 +64,7 @@ def decideStrategy(trading_type0, cases):
         elif cases['조건8'] == cases['조건2']: dirToday = cases['조건8']
 
     # 필터 확인
-    if trading_filter and cases['필터' + trading_filter] != '1': dirToday = -1
+    if trading_filter and cases['필터' + trading_filter] != 1: dirToday = -1
 
     return (dirToday, sellType)
 
