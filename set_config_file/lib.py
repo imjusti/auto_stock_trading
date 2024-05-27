@@ -13,17 +13,25 @@ def getStrategy(url, str_today):
     res = requests.get(url + str_today)
     obj = res.json();
 
-    case1 = int(obj['case1'])
-    case5 = int(obj['case5'])
-    case7 = int(obj['case7'])
-    case8 = int(obj['case8'])
-
-    range150 = int(obj['range150'])
-    range150x2 = int(obj['range150x2'])
-    
-    filter1 = int(obj['filter1'])
-
+    case1 = ''
     case2 = ''
+    case5 = ''
+    case7 = ''
+    case8 = ''
+    range150 = ''
+    range150x2 = ''
+    filter1 = ''
+
+    if obj['case1'] is not None: case1 = int(obj['case1'])
+    if obj['case5'] is not None: case5 = int(obj['case5'])
+    if obj['case7'] is not None: case7 = int(obj['case7'])
+    if obj['case8'] is not None: case8 = int(obj['case8'])
+
+    if obj['range150'] is not None: range150 = int(obj['range150'])
+    if obj['range150x2'] is not None: range150x2 = int(obj['range150x2'])
+
+    if obj['filter1'] is not None: filter1 = int(obj['filter1'])
+
     if obj['case2'] is not None: case2 = int(obj['case2'])
         
     result = {'조건1': case1, '조건2': case2, '조건5': case5, '조건7': case7, '조건8': case8, '범위150': range150, '범위150x2': range150x2, '필터1': filter1}
