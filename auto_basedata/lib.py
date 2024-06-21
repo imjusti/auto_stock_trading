@@ -18,6 +18,7 @@ def txt2code(txt):
 
     return str(code)
 
+# 요약정보 가져오기
 def getCodes(driver, url):
     driver.get(url)
     
@@ -37,6 +38,28 @@ def getCodes(driver, url):
         print(f"Error decoding JSON: {e}")
 
     return [code_summary, code_moving, code_indicator]
+
+
+# 기술지표 가져오기
+def getIndicators(driver, url):
+    driver.get(url)
+	
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    body = soup.find('body')
+
+    actions = []
+    try:
+        json_data = json.loads(body.pre.text)
+
+        for key in json_data["indicators"]:
+            indicator = json_data["indicators"][key]
+            if "action" in indicator:
+                value = indicator["action"]
+                actions.append(f"{key}:{value}")
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+
+    return actions
 
 # 텔레그램 전송
 async def sendTelegramMsg(fundName, bot, chat_id, msg):

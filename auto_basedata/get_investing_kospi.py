@@ -48,6 +48,9 @@ arr_week = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/tec
 # 월간 자료
 arr_month = lib.getCodes(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1mo')
 
+# 일간 기술 지표
+arr_tech_day = lib.getIndicators(driver, 'https://api.investing.com/api/financialdata/technical/analysis/37426/1d')
+
 driver.quit()
 
 # 서버로 전송
@@ -60,7 +63,8 @@ url = config['url_save_invesing_kospi'] + '&'.join([
     '5hour_val=' + ','.join(arr_5hour),
     'day_val=' + ','.join(arr_day),
     'week_val=' + ','.join(arr_week),
-    'month_val=' + ','.join(arr_month)
+    'month_val=' + ','.join(arr_month),
+    'day_tech=' + ','.join(arr_tech_day)
 ])
 res = requests.get(url)
 print(url, res.text)
@@ -76,6 +80,7 @@ msg = '\n'.join([
     '일간: ' + ','.join(arr_day),
     '주간: ' + ','.join(arr_week),
     '월간: ' + ','.join(arr_month),
+    '일간 기술지표: ' + ','.join(arr_tech_day),
     'result: ' + res.text
 ])
 # 포지션 변경시 알림 표시
